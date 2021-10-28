@@ -1,17 +1,17 @@
 import { Request, Response, NextFunction } from 'express';
+import { ICreatePost } from '../interfaces/post.interface';
 import PostService from '../services/post.service';
 
 class PostController {
     async create(req: Request, res: Response, next: NextFunction) {
-        const PostName = req.body.name;
-        const PostNote = req.body.note;
-        const PostImage = req.body.image;
-        const PostCreateBy = req.body.createby;
-        const PostCreateAt = new Date();
-        const a = PostService.createPost(PostName, PostNote, PostImage, PostCreateBy, PostCreateAt);
+        const body = req.body;
+        const params: ICreatePost = {
+            ...body,
+            createdAt: new Date()
+        };
         try {
-            const b = await a;
-            res.status(201).json(b);
+            const postData = await PostService.createPost(params);
+            res.status(201).json(postData);
         } catch (error) {
             res.status(500).json(error);
         }
@@ -53,7 +53,7 @@ class PostController {
             res.status(500).json(error);
         }
     };
-    
+
     async delete(req: Request, res: Response, next: NextFunction) {
         const id = req.params.id;
         const a = PostService.deletePost(id);
@@ -67,6 +67,3 @@ class PostController {
 }
 
 export default new PostController;
-
-// import moment from 'moment';
-// var momentDate = moment(PostCreateAt).format('DD/MM/YYYY');

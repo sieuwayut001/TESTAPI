@@ -1,5 +1,2 @@
-import dotenv from 'dotenv';
-dotenv.config();
-
-let host = process.env.DB_HOST;
-let port = process.env.PORT ;
+export const DB_HOST = process.env.DB_HOST || '';
+export const PORT = process.env.PORT;

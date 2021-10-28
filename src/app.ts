@@ -1,15 +1,13 @@
 
-import createError ,{HttpError} from 'http-errors';
-import express,{ Request, Response , NextFunction} from 'express';
+import dotenv from 'dotenv';
+dotenv.config();
+import createError, { HttpError } from 'http-errors';
+import express, { Request, Response, NextFunction } from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
-
-
-import indexRouter from './routes/post';
-
-import './configs/index';
-import './models/connection';
+import router from './routes';
+import './common/dbConnection';
 
 var app = express();
 
@@ -21,18 +19,17 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname,'../', 'public')));
+app.use(express.static(path.join(__dirname, '../', 'public')));
 
-app.use('/', indexRouter);
-// app.use('/users', usersRouter);
+app.use('/', router);
 
 // catch 404 and forward to error handler
-app.use(function(req: Request, res: Response, next: NextFunction) {
+app.use(function (req: Request, res: Response, next: NextFunction) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err: HttpError, req: Request, res: Response, next: NextFunction) {
+app.use(function (err: HttpError, req: Request, res: Response, next: NextFunction) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
